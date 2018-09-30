@@ -1,0 +1,156 @@
+import java.awt.Dimension;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+
+import javax.swing.JScrollPane;
+
+
+public class GpaGUI extends javax.swing.JFrame {
+   // Initiates variables
+    private javax.swing.JButton inputFileChooser;
+    private javax.swing.JButton outputFileChooser;
+    private javax.swing.JTextArea textArea;
+    private JScrollPane vbarRight;
+
+
+    BufferedWriter outWriter;
+    Calculator s[];
+   
+   
+  
+  
+
+    private void GpaGUI() {
+     
+        inputFileChooser = new javax.swing.JButton();
+        outputFileChooser = new javax.swing.JButton();
+     
+
+        textArea = new javax.swing.JTextArea(0, 0);
+        vbarRight = new javax.swing.JScrollPane(textArea);
+        vbarRight.setBounds(12, 20, 715, 220);
+
+
+    
+  
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent close) {
+                formWindowClosing(close);
+            }
+        });
+
+        inputFileChooser.setText("Input File");
+        inputFileChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent input) {
+                inputFile(input);
+            }
+        });
+
+        outputFileChooser.setText("Output File");
+        outputFileChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent output) {
+                outputFile(output);
+            }
+        });
+
+        setPreferredSize (new Dimension (775, 400));
+        setLayout (null);
+        // add buttons and textArea
+        add (vbarRight);
+        add (inputFileChooser);
+        add (outputFileChooser);
+
+  
+        // set button layout.
+        inputFileChooser.setBounds (20, 270, 85, 25);
+        outputFileChooser.setBounds (110, 270, 95, 25);
+        pack();
+    }
+
+    private void inputFile(java.awt.event.ActionEvent evt) {
+
+          File file=null;
+          JFileChooser chooser = new JFileChooser();
+           chooser.setDialogTitle("Please Load file.");
+           int result = chooser.showOpenDialog(null);
+          if (result == JFileChooser.APPROVE_OPTION) {
+           file = chooser.getSelectedFile();
+      }
+       String fileName=null;
+     try{
+         fileName = file.getCanonicalPath();
+         Calculator.inputFile(fileName);
+         s= Calculator.makeRandom(10);
+         for (Calculator m: s)
+          
+          textArea.append(m+"\n");
+     }catch(IOException e)
+     {
+         System.out.println("Input ouput Exception ");
+         System.exit(1);
+     }
+    }
+
+    private void outputFile(java.awt.event.ActionEvent evt) {
+         File file=null;
+        
+          JFileChooser chooser = new JFileChooser();
+          // set window name
+           chooser.setDialogTitle("Write file.");
+           int result = chooser.showOpenDialog(null);
+          if (result == JFileChooser.APPROVE_OPTION) {
+
+           file = chooser.getSelectedFile();
+      }
+        
+       String fileName=null;
+     try{
+       // get outfile name
+         fileName = file.getCanonicalPath();
+         outWriter=new BufferedWriter(new FileWriter(fileName));
+     }catch(IOException e)
+     {
+         System.out.println("Input ouput Exception ");
+         System.exit(1);
+     }
+    }
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {
+         try {
+                     outWriter.write(textArea.getText());
+                    outWriter.close();
+        } catch (Exception e) {
+        }
+    }
+
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+
+        } catch (InstantiationException ex) {
+
+        } catch (IllegalAccessException ex) {
+
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+
+        }
+     
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new GpaGUI().setVisible(true);
+            }
+        });
+    }
+}
